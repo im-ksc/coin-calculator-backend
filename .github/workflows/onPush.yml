@@ -46,12 +46,10 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build Docker image
-        working-directory: MemoryGameBackEnd
         run: |
           docker build -t ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:$IMAGE_TAG .
 
       - name: Push Docker image
-        working-directory: MemoryGameBackEnd
         run: |
           docker push ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:$IMAGE_TAG
 
