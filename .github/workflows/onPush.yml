@@ -1,0 +1,36 @@
+name: SCA + Lint + JaCoCo + Unit Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push-checks:
+    name: Code checks
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Run Lint (Spotless)
+        run: mvn spotless:check
+
+      - name: Run SCA (Sonatype)
+        run: mvn org.sonatype.ossindex.maven:ossindex-maven-plugin:audit
+
+      - name: Run Unit Tests + JaCoCo (Code Coverage)
+        run: mvn clean verify
+
+      - name: Upload JaCoCo Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: JaCoCo-report
+          path: target/site/jacoco
