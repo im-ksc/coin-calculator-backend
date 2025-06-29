@@ -89,11 +89,20 @@ docker build -t {your-docker-username}/coin-calculator-backend:latest .
 ```
 docker push {your-docker-username}/coin-calculator-backend:latest
 ```
-2. Run Docker Container
+3. Access the Cloud Server VM
+```
+SSH root@{server_ip}
+```
+4. Install [Docker Engine](https://docs.docker.com/engine/install/) if not done
+5. Pull Docker Image from [DockerHub](https://hub.docker.com/) (Login if required)
+```
+docker pull {your-docker-username}/coin-calculator-backend:latest
+```
+6. Run Docker Container
 ```
 docker run -d --name coin-calculator-backend -p 8080:8080 {your-docker-username}/coin-calculator-backend:latest
 ```
-3. Test API request (Refer to above Windows cmd and Bash commands)
+7. Test API request (Refer to above Windows cmd and Bash commands)
 Replace **localhost:8080** with the **Host Url**. Example as below
 ```
 curl -X POST http://123.12.123.123:8080/api/coin/calculate ^
