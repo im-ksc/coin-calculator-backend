@@ -51,8 +51,9 @@ public class CoinCalculatorService {
 
         // if minimum amount of coins to achieve value (scaledTarget in this case)
         // means no solution, the provided coin denominations unable to reach target perfectly
+        // use greedy algorithm instead
         if (minCoins[scaledTarget] == scaledTarget + 1) {
-            return null;
+            return greedy(target, coinDenominations);
         }
 
         // Track back which coins helped achieved minimum amount of coins
@@ -66,5 +67,30 @@ public class CoinCalculatorService {
         }
 
         return coinList.stream().sorted().toList();
+    }
+
+    public List<Double> greedy(double target, List<Double> coinsDenominations) {
+
+        List<Double> coinList = new ArrayList<>();
+        List<Double> reversedSortedCoinDenominations =
+                coinsDenominations.stream()
+                        .sorted((coin1, coin2) -> coin2.compareTo(coin1))
+                        .toList();
+
+        // take largest coin denomination first, add to coinList until the remainder < denomination
+        // then go to next smaller denomination and repeat.
+        double remainder = target;
+        for (double coin : reversedSortedCoinDenominations) {
+            while (remainder >= coin) {
+                coinList.add(coin);
+                remainder -= coin;
+            }
+        }
+
+        if (coinList.isEmpty()) {
+            return null;
+        }
+
+        return coinList.reversed();
     }
 }

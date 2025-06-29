@@ -53,3 +53,25 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:$IMAGE_TAG
 
+      - name: Deploy to DigitalOcean Droplet
+        uses: appleboy/ssh-action@v1.2.2
+        env:
+          IMAGE_NAME: "coincalculator"
+          IMAGE_TAG: "latest"
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: root
+          key: ${{ secrets.DO_SSH }}
+          envs: IMAGE_NAME, IMAGE_TAG
+          script: |
+            # Pull the latest image
+            docker pull ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:$IMAGE_TAG
+              
+            # Stop and remove existing container if running
+            if [ "$(docker ps -f "name=$IMAGE_NAME" --format "{{.Status}}")" ]; then
+              docker stop $IMAGE_NAME
+              docker rm $IMAGE_NAME
+            fi
+              
+            # Run the new container with environment variables
+            docker run -d --name $IMAGE_NAME -p 80:8080 ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:$IMAGE_TAG
