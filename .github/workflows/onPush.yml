@@ -82,4 +82,4 @@ jobs:
             fi
               
             # Run the new container with environment variables
-            docker run -d --name $IMAGE_NAME -p 80:8080 ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:$IMAGE_TAG
+            docker run -d --name $IMAGE_NAME -p 8080:8080 ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:$IMAGE_TAG
